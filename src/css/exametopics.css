@@ -1,6 +1,6 @@
 .study_score{
     position:fixed; 
-    z-index:99999999; 
+    z-index:99999 !important;
     border-radius:10px; 
     z-index: 99; 
     left: 10px;

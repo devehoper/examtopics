@@ -4,8 +4,10 @@ removeCookie("_ga");
 removeCookie("csrftoken");
 
 let txtScore = localStorage.getItem("study_score") != null ? localStorage.getItem("study_score") : 0;
+let totalQuestions = localStorage.getItem("totalQuestions") != null ? localStorage.getItem("totalQuestions") : 0;
+
 $("#score").length === 0
-? $("body").prepend("<div class='study_score' ><a style='margin-left: 10px;'>Score:</a><span id='score'>" + txtScore + "</span> <p> <button id='resetScore' class='btn btn-primary'>Reset</button></div>")
+? $("body").prepend("<div class='study_score' ><a style='margin-left: 10px;'>Score:</a><span id='score'>" + txtScore + "</span>/ <span id='totalQuestions'>" + totalQuestions + "</span><p> <button id='resetScore' class='btn btn-primary'>Reset</button></div>")
     : null;
 
 $(".multi-choice-item").css("cursor", "pointer");
@@ -14,10 +16,17 @@ $(".multi-choice-item").click(function(e) {
     e.preventDefault();
     let score = 0;
 
+    // Sets Score
     if(localStorage.getItem("study_score") === null) {
         localStorage.setItem("study_score", score);
     } else {
         score = localStorage.getItem("study_score");
+    }
+
+    if($(this).parent().find(".clicked").length === 0) {
+        totalQuestions = Number(totalQuestions) + Number(1);
+        localStorage.setItem("totalQuestions", totalQuestions);
+        $("#totalQuestions").html(totalQuestions);
     }
 
     if($(this).hasClass("correct-hidden")) {
