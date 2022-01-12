@@ -19,6 +19,18 @@
       {
           "matches": ["https://www.examtopics.com/exams/*/*/*/*/"],
           "js": ["/src/lib/jquery3.6.js", "/src/js/exametopics.js"]
+      },
+      {
+        "matches": ["https://www.examtopics.com/exams/*/"],
+        "js": ["/src/lib/jquery3.6.js", "/src/js/exametopics.js"]
+      },
+      {
+        "matches": ["https://www.examtopics.com/exams/*/*/"],
+        "js": ["/src/lib/jquery3.6.js", "/src/js/exametopics.js"]
+      },
+      {
+        "matches": ["https://www.examtopics.com/exams/*/*/*/"],
+        "js": ["/src/lib/jquery3.6.js", "/src/js/exametopics.js"]
       }
     ]
   }
