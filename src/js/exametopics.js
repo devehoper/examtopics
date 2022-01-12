@@ -23,6 +23,12 @@ $(".multi-choice-item").click(function(e) {
         score = localStorage.getItem("study_score");
     }
 
+    if(localStorage.getItem("totalQuestions") === null) {
+        localStorage.setItem("totalQuestions", score);
+    } else {
+        totalQuestions = localStorage.getItem("totalQuestions");
+    }
+
     if($(this).parent().find(".clicked").length === 0) {
         totalQuestions = Number(totalQuestions) + Number(1);
         localStorage.setItem("totalQuestions", totalQuestions);
@@ -51,6 +57,7 @@ $("#resetScore").click(function(e) {
     e.preventDefault();
     localStorage.setItem("study_score", 0);
     localStorage.setItem("totalQuestions", 0);
+    score, totalQuestions = 0;
     $("#score").html(0);
     $("#totalQuestions").html(0);
     $(".multi-choice-item").css("border", "none");
