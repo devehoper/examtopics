@@ -1,0 +1,14 @@
+.study_score{
+    position:fixed; 
+    z-index:99999999; 
+    border-radius:10px; 
+    z-index: 99; 
+    left: 10px;
+    top:200px; 
+    background-color:#CCC;
+}
+
+#resetScore{
+    margin-left: 10px; 
+    margin-right: 10px
+}
