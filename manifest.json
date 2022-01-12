@@ -3,12 +3,10 @@
     "description": "Scoreboard for examtopics",
     "version": "1.0",
     "manifest_version": 3,
-    "background": {
-      "service_worker": "/src/js/background.js"
-    },
-    "permissions": ["storage", "activeTab", "scripting"],
+    "permissions": [
+      "tabs", "webNavigation"
+    ],  
     "action": {
-      "default_popup": "popup.html",
       "default_icon": {
         "16": "/images/get_started16.png",
         "32": "/images/get_started32.png",
@@ -19,8 +17,8 @@
     "options_page": "options.html",
     "content_scripts": [
       {
-          "matches": ["https://www.examtopics.com/exams/microsoft/az-900/view/"],
+          "matches": ["https://www.examtopics.com/exams/microsoft/*/view/*/"],
           "js": ["/src/lib/jquery3.6.js", "/src/js/exametopics.js"]
       }
-  ]  
+    ]
   }
