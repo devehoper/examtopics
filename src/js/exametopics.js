@@ -7,7 +7,7 @@ let txtScore = localStorage.getItem("study_score") != null ? localStorage.getIte
 let totalQuestions = localStorage.getItem("totalQuestions") != null ? localStorage.getItem("totalQuestions") : 0;
 
 $("#score").length === 0
-? $("body").prepend("<div class='study_score' ><a style='margin-left: 10px;'>Score:</a><span id='score'>" + txtScore + "</span>/ <span id='totalQuestions'>" + totalQuestions + "</span><p> <button id='resetScore' class='btn btn-primary'>Reset</button></div>")
+? $("body").prepend("<div class='study_score' ><a style='margin-left: 10px;'>Score:</a><span id='score'>" + txtScore + "</span> / <span id='totalQuestions'>" + totalQuestions + "</span><p> <button id='resetScore' class='btn btn-primary'>Reset</button></div>")
     : null;
 
 $(".multi-choice-item").css("cursor", "pointer");
@@ -50,7 +50,9 @@ $(".multi-choice-item").click(function(e) {
 $("#resetScore").click(function(e) {
     e.preventDefault();
     localStorage.setItem("study_score", 0);
+    localStorage.setItem("totalQuestions", 0);
     $("#score").html(0);
+    $("#totalQuestions").html(0);
     $(".multi-choice-item").css("border", "none");
     $(".clicked").removeClass("clicked");
 });
