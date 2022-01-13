@@ -70,7 +70,6 @@ $(".multi-choice-item").click(function(e) {
         $(this).css("border-radius", "10px");        
     }
     calculateScore();
-    $($(this)).parent().parent().parent().find(".reveal-solution").click();
 
 });
 
