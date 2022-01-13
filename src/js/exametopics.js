@@ -26,9 +26,11 @@ $("#score").length === 0
     ? $("body").prepend(html)
     : null;
 
+
 //everytime user clicks on a answer
 $(".multi-choice-item").click(function(e) {
     e.preventDefault();
+
     // Sets Score
     if(localStorage.getItem("study_score") === null) {
         localStorage.setItem("study_score", score);
@@ -55,7 +57,8 @@ $(".multi-choice-item").click(function(e) {
     if($(this).hasClass("correct-hidden")) {
         // if user havent answered this question before
         $(this).addClass("clicked");
-        if(notAnswered) {
+        if($(this).parent().find(".correct-hidden").length >= $(this).parent().find(".clicked").length    
+        ) {
             $(this).css("border", "2px solid GREEN");
             score = Number(score) + Number(1)
         }
