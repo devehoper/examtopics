@@ -1,3 +1,4 @@
+//remove cookies to allow navigate further pages
 removeCookie("_gid");
 removeCookie("sessionid");
 removeCookie("_ga");
@@ -13,13 +14,15 @@ let minScore = localStorage.getItem("minScore") != null ? localStorage.getItem("
 /**
  * html elements for score board
  */
-let inputMinScore = 'Min % to pass:<p><input type="number" id="scoreToPass" min="0" max="100" placeholder="% to pass" value="' + minScore + '"/> %';
+let inputMinScore = 'Min % to pass: <input type="number" id="scoreToPass" min="0" max="100" placeholder="% to pass" value="' + minScore + '"/> %';
+let manualQuestion = '<input type="text" id="manualQuestion" placeholder="Manual questions" />';
+let manualScore = '<p><button class="btn btn-success" id="incrementScore">Increment Score</button> <p> <button class="btn btn-danger" id="decrementScore">Decrement Score</button>';
 let status = '<div>Status: <span id="status" class="pass">Pass</span></div>';
 let resetButton = "<button id='resetScore' class='btn btn-primary'>Reset</button>";
 let htmlScore = "<span id='score'>" + score + "</span>";
 let htmlTotalQuestions = "<span id='totalQuestions'>" + totalQuestions + "</span>";
 let html = "<div class='study_score' ><a style='margin-left: 10px;'>Score:</a>"
-         + htmlScore + " / " + htmlTotalQuestions + "<p>" + inputMinScore + status + "<p> " + resetButton + "</div>";
+         + htmlScore + " / " + htmlTotalQuestions + "<p>" + inputMinScore + "<p>" + manualQuestion + manualScore + status + "<p> " + resetButton + "</div>";
 
 //check if score its already on screen, if not then place it
 $("#score").length === 0
@@ -54,26 +57,27 @@ $(".multi-choice-item").click(function(e) {
     }
 
     // User chosed correct answer
-    if($(this).hasClass("correct-hidden")) {
+    if($(this).hasClass("correct-hidden") && $(this).parent().find(".incorrect-hidden").length == 0) {
         // if user havent answered this question before
-        $(this).addClass("clicked");
-        if($(this).parent().find(".correct-hidden").length >= $(this).parent().find(".clicked").length    
-        ) {
+        if(!$(this).hasClass("clicked")) {
             $(this).css("border", "2px solid GREEN");
-            score = Number(score) + Number(1)
+            $(this).css("border-radius", "10px");
+            incrementScore();
         }
-        
-        $(this).css("border", "2px solid GREEN");
-        $(this).css("border-radius", "10px");
-        localStorage.setItem("study_score", score);
-        $("#score").html(score);
-    } else { //User choser wrong answer
         $(this).addClass("clicked");
-        $(this).css("border", "2px solid RED");
-        $(this).css("border-radius", "10px");        
+
+    } else { //User choser wrong answer
+        if($(this).hasClass("correct-hidden")) {
+            $(this).css("border", "2px solid GREEN");
+        } else {
+            $(this).addClass("incorrect-hidden");
+            $(this).css("border", "2px solid RED");
+        }
+        $(this).css("border-radius", "10px");
+        $(this).addClass("clicked");
+        
     }
     calculateScore();
-
 });
 
 
@@ -87,7 +91,36 @@ $("#resetScore").click(function(e) {
     $("#totalQuestions").html(0);
     $(".multi-choice-item").css("border", "none");
     $(".clicked").removeClass("clicked");
+    $(".incorrect-hidden").removeClass("incorrect-hidden");
+    
 });
+
+$("#incrementScore").click(function(e) {
+    e.preventDefault();
+    incrementScore();
+});
+
+$("#decrementScore").click(function(e) {
+    e.preventDefault();
+    decrementScore();
+});
+
+function setScore() {
+    $("#score").html(score);
+    localStorage.setItem("study_score", score);
+    calculateScore();
+}
+function incrementScore() {
+    score++;
+    setScore();
+}
+
+function decrementScore() {
+    if(score > 0) {
+        score--;
+        setScore();
+    }
+}
 
 // Remove cookies
 function removeCookie(sKey, sPath, sDomain) {
@@ -97,13 +130,13 @@ function removeCookie(sKey, sPath, sDomain) {
                   (sPath ? "; path=" + sPath : "");
 }
 
-//Calculates user score
+//Calculates user score according to % to pass the exame
 function calculateScore() {
     let scoreToPass = Number($("#scoreToPass").val());
     let score = Number($("#score").html());
     let totalQuestions = Number($("#totalQuestions").html());
 
-    if(score >= (scoreToPass / 100)* totalQuestions) {
+    if(score >= (scoreToPass / 100) * totalQuestions) {
         $("#status").removeClass("fail");
         $("#status").addClass("pass");
         $("#status").html("Pass");
@@ -114,7 +147,7 @@ function calculateScore() {
     }
 }
 
-//Update score % needed to pass
+// Update score % needed to pass
 $("#scoreToPass").on('change', function(e) {
     localStorage.setItem("minScore", $(this).val());    
 });
