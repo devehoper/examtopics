@@ -10,12 +10,13 @@ removeCookie("csrftoken");
 let totalQuestions = localStorage.getItem("totalQuestions") != null ? localStorage.getItem("totalQuestions") : 0;
 let score = localStorage.getItem("study_score") != null ? localStorage.getItem("study_score") : 0;
 let minScore = localStorage.getItem("minScore") != null ? localStorage.getItem("minScore") : localStorage.setItem("minScore", 50);
+let multiAnswerCounter = 0;
 
 /**
  * html elements for score board
  */
 let inputMinScore = 'Min % to pass: <input type="number" id="scoreToPass" min="0" max="100" placeholder="% to pass" value="' + minScore + '"/> %';
-let manualQuestion = '<input type="text" id="manualQuestion" placeholder="Manual questions" />';
+let manualQuestion = '<textarea id="manualQuestion" placeholder="Manual questions"> </textarea>';
 let manualScore = '<p><button class="btn btn-success" id="incrementScore">Increment Score</button> <p> <button class="btn btn-danger" id="decrementScore">Decrement Score</button>';
 let status = '<div>Status: <span id="status" class="pass">Pass</span></div>';
 let resetButton = "<button id='resetScore' class='btn btn-primary'>Reset</button>";
@@ -58,12 +59,28 @@ $(".multi-choice-item").click(function(e) {
 
     // User chosed correct answer
     if($(this).hasClass("correct-hidden") && $(this).parent().find(".incorrect-hidden").length == 0) {
-        // if user havent answered this question before
-        if(!$(this).hasClass("clicked")) {
+        if(
+            $(this).parent().find(".correct-hidden").length > 1
+        ) {
+            $(this).addClass("clicked");
             $(this).css("border", "2px solid GREEN");
             $(this).css("border-radius", "10px");
-            incrementScore();
+            if(
+                !$(this).parent().hasClass("answered") 
+                && $(this).parent().find(".clicked").length == $(this).parent().find(".correct-hidden").length
+            ) {
+                incrementScore();
+                $(this).parent().addClass("answered");
+            }
+        } else {
+            // if user havent answered this question before
+            if(!$(this).hasClass("clicked")){
+                $(this).css("border", "2px solid GREEN");
+                $(this).css("border-radius", "10px");
+                incrementScore();
+            }
         }
+        
         $(this).addClass("clicked");
 
     } else { //User choser wrong answer
@@ -92,6 +109,7 @@ $("#resetScore").click(function(e) {
     $(".multi-choice-item").css("border", "none");
     $(".clicked").removeClass("clicked");
     $(".incorrect-hidden").removeClass("incorrect-hidden");
+    $(".answered").removeClass("answered");
     
 });
 
@@ -111,6 +129,7 @@ function setScore() {
     calculateScore();
 }
 function incrementScore() {
+    // cannot set condition if score < totalquestions because we have manual questions that cant be validated
     score++;
     setScore();
 }
@@ -149,5 +168,6 @@ function calculateScore() {
 
 // Update score % needed to pass
 $("#scoreToPass").on('change', function(e) {
-    localStorage.setItem("minScore", $(this).val());    
+    localStorage.setItem("minScore", $(this).val());
+    calculateScore();
 });
