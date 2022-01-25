@@ -103,7 +103,8 @@ $("#resetScore").click(function(e) {
     e.preventDefault();
     localStorage.setItem("study_score", 0);
     localStorage.setItem("totalQuestions", 0);
-    score, totalQuestions = 0;
+    score = 0;
+    totalQuestions = 0;
     $("#score").html(0);
     $("#totalQuestions").html(0);
     $(".multi-choice-item").css("border", "none");
@@ -131,6 +132,10 @@ function setScore() {
 function incrementScore() {
     // cannot set condition if score < totalquestions because we have manual questions that cant be validated
     score++;
+    totalQuestions++;
+    $("#totalQuestions").html(totalQuestions);
+    localStorage.setItem("totalQuestions", totalQuestions);
+    localStorage.setItem("study_score", score);
     setScore();
 }
 
