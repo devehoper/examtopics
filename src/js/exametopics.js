@@ -16,7 +16,7 @@ let multiAnswerCounter = 0;
  * html elements for score board
  */
 let inputMinScore = 'Min % to pass: <input type="number" id="scoreToPass" min="0" max="100" placeholder="% to pass" value="' + minScore + '"/> %';
-let manualQuestion = '<textarea id="manualQuestion" placeholder="Manual questions"> </textarea>';
+let manualQuestion = '<textarea id="manualQuestion" placeholder="NotePad for manual questions"></textarea>';
 let manualScore = '<p><button class="btn btn-success" id="incrementScore">Increment Score</button> <p> <button class="btn btn-danger" id="decrementScore">Decrement Score</button>';
 let status = '<div>Status: <span id="status" class="pass">Pass</span></div>';
 let resetButton = "<button id='resetScore' class='btn btn-primary'>Reset</button>";
