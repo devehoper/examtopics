@@ -11,10 +11,13 @@ let totalQuestions = localStorage.getItem("totalQuestions") != null ? localStora
 let score = localStorage.getItem("study_score") != null ? localStorage.getItem("study_score") : 0;
 let minScore = localStorage.getItem("minScore") != null ? localStorage.getItem("minScore") : localStorage.setItem("minScore", 50);
 let multiAnswerCounter = 0;
+let testTimer = 0;
 
 /**
  * html elements for score board
  */
+
+let htmlTimer = '<p> Timer: <span id="timer"></span>';
 let inputMinScore = 'Min % to pass: <input type="number" id="scoreToPass" min="0" max="100" placeholder="% to pass" value="' + minScore + '"/> %';
 let manualQuestion = '<textarea id="manualQuestion" placeholder="NotePad for manual questions"></textarea>';
 let manualScore = '<p><button class="btn btn-success" id="incrementScore">Increment Score</button> <p> <button class="btn btn-danger" id="decrementScore">Decrement Score</button>';
@@ -23,13 +26,15 @@ let resetButton = "<button id='resetScore' class='btn btn-primary'>Reset</button
 let htmlScore = "<span id='score'>" + score + "</span>";
 let htmlTotalQuestions = "<span id='totalQuestions'>" + totalQuestions + "</span>";
 let html = "<div class='study_score' ><a style='margin-left: 10px;'>Score:</a>"
-         + htmlScore + " / " + htmlTotalQuestions + "<p>" + inputMinScore + "<p>" + manualQuestion + manualScore + status + "<p> " + resetButton + "</div>";
+         + htmlScore + " / " + htmlTotalQuestions + " " + htmlTimer + "<p>" + inputMinScore + "<p>" + manualQuestion + manualScore + status + "<p> " + resetButton + "</div>";
 
 //check if score its already on screen, if not then place it
 $("#score").length === 0
     ? $("body").prepend(html)
     : null;
 
+//starts timer
+$("#timer").length > 0 ? timer() : null;
 
 //everytime user clicks on a answer
 $(".multi-choice-item").click(function(e) {
@@ -59,6 +64,7 @@ $(".multi-choice-item").click(function(e) {
 
     // User chosed correct answer
     if($(this).hasClass("correct-hidden") && $(this).parent().find(".incorrect-hidden").length == 0) {
+        // Is multianswer question
         if(
             $(this).parent().find(".correct-hidden").length > 1
         ) {
@@ -69,15 +75,17 @@ $(".multi-choice-item").click(function(e) {
                 !$(this).parent().hasClass("answered") 
                 && $(this).parent().find(".clicked").length == $(this).parent().find(".correct-hidden").length
             ) {
-                incrementScore();
+                score++;
+                setScore();
                 $(this).parent().addClass("answered");
             }
-        } else {
+        } else { //Single answer question
             // if user havent answered this question before
             if(!$(this).hasClass("clicked")){
                 $(this).css("border", "2px solid GREEN");
                 $(this).css("border-radius", "10px");
-                incrementScore();
+                score++;
+                setScore();
             }
         }
         
@@ -111,7 +119,9 @@ $("#resetScore").click(function(e) {
     $(".clicked").removeClass("clicked");
     $(".incorrect-hidden").removeClass("incorrect-hidden");
     $(".answered").removeClass("answered");
-    
+    $("#timer").html("0 min");
+    clearInterval(testTimer);
+    timer();
 });
 
 $("#incrementScore").click(function(e) {
@@ -176,3 +186,11 @@ $("#scoreToPass").on('change', function(e) {
     localStorage.setItem("minScore", $(this).val());
     calculateScore();
 });
+
+function timer() {
+    let timer = 0;
+    testTimer = setInterval(function() {
+        timer++;
+        $("#timer").html('<i class="bi bi-stopwatch"></i>' + Math.floor(Number(timer / 60)).toFixed(0) + " min");
+    },1000);
+}
